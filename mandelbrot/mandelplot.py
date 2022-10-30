@@ -3,7 +3,7 @@
 ##############################################################################
 # Textual imports.
 from textual.app     import App, ComposeResult
-from textual.widgets import Static
+from textual.widgets import Static, Header, Footer
 
 ##############################################################################
 # Local imports.
@@ -44,6 +44,9 @@ class MandelPoint( Static ):
 class MandelbrotPlot( App[ None ] ):
     """An app to plot a Mandelbrot Set in the terminal."""
 
+    TITLE = "trMandelbrot -- A Terminal Mandelbrot Set Plotter"
+    """str: The title of the application."""
+
     CSS_PATH = "mandelplot.css"
     """str: The name of the CSS file."""
 
@@ -51,11 +54,13 @@ class MandelbrotPlot( App[ None ] ):
     """int: The width/height of the plot."""
 
     def compose( self ) -> ComposeResult:
+        yield Header()
         for x in range( self.SIZE ):
             for y in range( self.SIZE ):
                 yield MandelPoint(
                     ( ( 4.0 / self.SIZE ) * y ) - 3.0,
                     ( ( 4.0 / self.SIZE ) * x ) - 2.0
                 )
+        yield Footer()
 
 ### mandelplot.py ends here
