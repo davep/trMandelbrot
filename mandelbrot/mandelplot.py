@@ -26,7 +26,7 @@ class MandelPoint( Static ):
     def on_mount( self ) -> None:
         """Decide the colour of the location in the plot.
 
-        Notee:
+        Notes:
            For the moment this is simply a binary choice; either the point
            is in the set or not and the colour reflects that. In time this
            will be improved to add a bit more colour.
