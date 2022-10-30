@@ -14,7 +14,7 @@ class Point( NamedTuple ):
     y: float
     """float: The Y position of the point to track."""
 
-    resolution: int = 5000
+    max_iteration: int = 80
     """int: The resolution of the Mandelbrot set.
 
     Or, more to the point, the number of steps performed in the calculation,
@@ -22,15 +22,28 @@ class Point( NamedTuple ):
     you go, but the longer it takes to calculate.
     """
 
-    @property
-    def is_stable( self ) -> bool:
-        """Is the point stable?"""
+    def __int__( self ) -> int:
+        """Return the Mandelbrot calculation for the point.
+
+        Returns:
+            int: The number of loops to escape, or 0 if it didn't.
+
+        Note:
+            The point is considered to be stable, considered to have not
+            escaped, if the ``max_iteration`` has been hit without the
+            calculation going above 2.0.
+        """
         c1 = complex( self.x, self.y )
         c2 = 0
-        for _ in range( self.resolution ):
+        for n in range( self.max_iteration ):
             if abs( c2 ) > 2:
-                return False
+                return n
             c2 = c1 + ( c2 * c2 )
-        return True
+        return 0
+
+    @property
+    def is_stable( self ) -> bool:
+        """bool: Is the point stable?"""
+        return int( self ) == 0
 
 ### mandelbrot.py ends here
