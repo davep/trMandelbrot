@@ -53,6 +53,11 @@ class MandelbrotPlot( App[ None ] ):
     SIZE = 40
     """int: The width/height of the plot."""
 
+    BINDINGS = [
+        ( "q", "quit", "Quit" )
+    ]
+    """The keyboard bindings for the app."""
+
     def compose( self ) -> ComposeResult:
         yield Header()
         for x in range( self.SIZE ):
