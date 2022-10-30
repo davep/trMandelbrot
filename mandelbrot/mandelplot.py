@@ -21,7 +21,6 @@ class MandelPoint( Static ):
             y (float): The Y position of the point in the set.
         """
         super().__init__()
-        self.add_class( "no-text" )
         self.point = Point( x, y )
 
     def on_mount( self ) -> None:
@@ -33,6 +32,7 @@ class MandelPoint( Static ):
            will be improved to add a bit more colour.
         """
         self.add_class(
+            "no-text",
             "stable" if self.point.is_stable else "unstable",
             f"escape-{min( int( self.point ), 15 )}"
         )
