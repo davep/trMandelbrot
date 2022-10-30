@@ -2,7 +2,8 @@
 
 ##############################################################################
 # Python imports.
-from typing import NamedTuple
+from typing    import NamedTuple
+from functools import cache
 
 ##############################################################################
 class Point( NamedTuple ):
@@ -22,6 +23,7 @@ class Point( NamedTuple ):
     you go, but the longer it takes to calculate.
     """
 
+    @cache
     def __int__( self ) -> int:
         """Return the Mandelbrot calculation for the point.
 
