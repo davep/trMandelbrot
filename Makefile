@@ -51,11 +51,11 @@ lint:				# Run Pylint over the library
 
 .PHONY: typecheck
 typecheck:			# Perform static type checks with mypy
-	$(mypy) --scripts-are-modules $(library) tests $(wildcard bin/[a-z]*)
+	$(mypy) --scripts-are-modules $(library)
 
 .PHONY: stricttypecheck
 stricttypecheck:	        # Perform a strict static type checks with mypy
-	$(mypy) --scripts-are-modules --strict $(library) tests $(wildcard bin/[a-z]*)
+	$(mypy) --scripts-are-modules --strict $(library)
 
 .PHONY: checkall
 checkall: lint stricttypecheck # Check all the things
