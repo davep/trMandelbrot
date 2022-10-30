@@ -21,6 +21,7 @@ class MandelPoint( Static ):
             y (float): The Y position of the point in the set.
         """
         super().__init__()
+        self.add_class( "no-text" )
         self.point = Point( x, y )
 
     def on_mount( self ) -> None:
@@ -38,7 +39,7 @@ class MandelPoint( Static ):
 
     def render( self ) -> str:
         """Show the escape value for the given point."""
-        return "" # str( int( self.point ) )
+        return str( int( self.point ) )
 
 ##############################################################################
 class MandelbrotPlot( App[ None ] ):
@@ -54,7 +55,8 @@ class MandelbrotPlot( App[ None ] ):
     """int: The width/height of the plot."""
 
     BINDINGS = [
-        ( "q", "quit", "Quit" )
+        ( "q", "quit", "Quit" ),
+        ( "e", "toggle_escape", "Toggle #s" )
     ]
     """The keyboard bindings for the app."""
 
@@ -72,5 +74,9 @@ class MandelbrotPlot( App[ None ] ):
                     ( ( 4.0 / self.SIZE ) * x ) - 2.0
                 )
         yield Footer()
+
+    def action_toggle_escape( self ):
+        """Toggle the display of the escape values for each cell."""
+        self.query( MandelPoint ).toggle_class( "no-text" )
 
 ### mandelplot.py ends here

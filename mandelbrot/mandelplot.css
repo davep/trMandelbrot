@@ -18,9 +18,17 @@ MandelPoint.unstable {
     background: #022;
 }
 
+MandelPoint.unstable.no-text {
+    color: #00000000;
+}
+
 MandelPoint.stable {
-    color: #707070;
+    /* color: #707070; */
     background: #00F;
+}
+
+MandelPoint.stable.no-text {
+    color: #00000000;
 }
 
 MandelPoint.escape-2 { background: #200; }
