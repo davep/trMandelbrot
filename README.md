@@ -7,7 +7,9 @@ Likely not a good example of plotting a Mandelbrot Set, or indeed a good
 example of a Textual app -- think of it more as a playground to try fun
 stuff out.
 
-As of the time of writing it's very much a fixed view, with a binary colour
-choice. The aim is to improve on that over time.
+Expect lots of change over time; don't expect it to be the most efficient
+approach -- at least not for now. That's on purpose. This is 100% about
+exploring the edges of what can be done with Textual, it's not about writing
+a good Mandelbrot Explorer.
 
 [//]: # (README.md ends here)
