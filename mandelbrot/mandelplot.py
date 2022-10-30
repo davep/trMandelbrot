@@ -67,6 +67,10 @@ class MandelbrotPlot( App[ None ] ):
         self.from_y = -2.5
         self.to_y   = 1.5
 
+    def on_mount( self ) -> None:
+        """Initialise some things once the DOM has been loaded."""
+        self.title = f"{self.TITLE} -- ({self.from_x}, {self.from_y} -> {self.to_x}, {self.to_y})"
+
     @classmethod
     def frange( cls, r_from: float, r_to: float ) -> Iterator[ float ]:
         """Generate a float range for the plot.
