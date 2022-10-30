@@ -1,0 +1,20 @@
+Screen {
+    layout: grid;
+    grid-size: 40 40;
+    grid-gutter: 0 0;
+}
+
+MandelPoint {
+    width: 100%;
+    height: 100%;
+}
+
+MandelPoint.unstable {
+    background: #303030;
+}
+
+MandelPoint.stable {
+    background: #909090;
+}
+
+/* mandelplot.css ends here */
