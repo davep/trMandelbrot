@@ -7,8 +7,9 @@ from typing  import Iterator
 
 ##############################################################################
 # Textual imports.
-from textual.app     import App, ComposeResult
-from textual.widgets import Static, Header, Footer
+from textual.app      import App, ComposeResult
+from textual.widgets  import Static, Header, Footer
+from textual.reactive import reactive
 
 ##############################################################################
 # Local imports.
@@ -59,13 +60,10 @@ class MandelbrotPlot( App[ None ] ):
     ]
     """The keyboard bindings for the app."""
 
-    def __init__( self ) -> None:
-        """Initialise the application."""
-        super().__init__()
-        self.from_x = -2
-        self.to_x   = 2
-        self.from_y = -2.5
-        self.to_y   = 1.5
+    from_x = reactive( -2 )
+    to_x   = reactive( 2 )
+    from_y = reactive( -2.5 )
+    to_y   = reactive( 1.5 )
 
     def on_mount( self ) -> None:
         """Initialise some things once the DOM has been loaded."""
