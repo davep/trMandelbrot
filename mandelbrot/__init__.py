@@ -13,4 +13,12 @@ __email__      = "davep@davep.org"
 __version__    = "0.0.1"
 __licence__    = "GPLv3+"
 
+##############################################################################
+# Make the app class available via easy import.
+from .mandelplot import MandelbrotPlot
+
+##############################################################################
+# Export the main app class.
+__all__ = [ "MandelbrotPlot" ]
+
 ### __init__.py ends here

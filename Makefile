@@ -12,6 +12,14 @@ mypy    := $(run) mypy
 run:
 	$(python) -m $(library)
 
+.PHONY: debug
+debug:
+	$(run) textual run --dev $(library):MandelbrotPlot
+
+.PHONY: console
+console:
+	$(run) textual console
+
 ##############################################################################
 # Setup/update packages the system requires.
 .PHONY: setup
