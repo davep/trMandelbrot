@@ -1,6 +1,11 @@
 """Simple Mandelbrot Set plotter for the terminal, done in Textual."""
 
 ##############################################################################
+# Python imports.
+from decimal import Decimal
+from typing  import Iterator
+
+##############################################################################
 # Textual imports.
 from textual.app     import App, ComposeResult
 from textual.widgets import Static, Header, Footer
@@ -54,6 +59,31 @@ class MandelbrotPlot( App[ None ] ):
     ]
     """The keyboard bindings for the app."""
 
+    def __init__( self ) -> None:
+        """Initialise the application."""
+        super().__init__()
+        self.from_x = -2
+        self.to_x   = 2
+        self.from_y = -2.5
+        self.to_y   = 1.5
+
+    @classmethod
+    def frange( cls, r_from: float, r_to: float ) -> Iterator[ float ]:
+        """Generate a float range for the plot.
+
+        Args:
+            r_from (float): The value to generate from.
+            r_to (float): The value to generate to.
+
+        Yields:
+            float: Values between the range to fit the plot.
+        """
+        step = Decimal( r_to - r_from ) / Decimal( cls.SIZE )
+        n    = Decimal( r_from )
+        while n < r_to:
+            yield float( n )
+            n += Decimal( step )
+
     def compose( self ) -> ComposeResult:
         """Compose the main screen..
 
@@ -61,12 +91,9 @@ class MandelbrotPlot( App[ None ] ):
             ComposeResult: The result of composing the screen.
         """
         yield Header()
-        for x in range( self.SIZE ):
-            for y in range( self.SIZE ):
-                yield MandelPoint(
-                    ( ( 4.0 / self.SIZE ) * y ) - 3.0,
-                    ( ( 4.0 / self.SIZE ) * x ) - 2.0
-                )
+        for x in self.frange( self.from_x, self.to_x ):
+            for y in self.frange( self.from_y, self.to_y ):
+                yield MandelPoint( y, x )
         yield Footer()
 
     def action_toggle_escape( self ) -> None:
