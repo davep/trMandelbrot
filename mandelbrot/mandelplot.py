@@ -33,6 +33,10 @@ class MandelPoint( Static ):
         """
         self.add_class( "stable" if self.point.is_stable else "unstable" )
 
+    def render( self ) -> str:
+        """Show the escape value for the given point."""
+        return str( int( self.point ) )
+
 ##############################################################################
 class MandelbrotPlot( App[ None ] ):
     """An app to plot a Mandelbrot Set in the terminal."""

@@ -7,13 +7,16 @@ Screen {
 MandelPoint {
     width: 100%;
     height: 100%;
+    text-align: center;
 }
 
 MandelPoint.unstable {
+    color: #505050;
     background: #303030;
 }
 
 MandelPoint.stable {
+    color: #707070;
     background: #909090;
 }
 
