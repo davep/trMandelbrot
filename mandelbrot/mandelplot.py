@@ -75,7 +75,7 @@ class MandelbrotPlot( App[ None ] ):
                 )
         yield Footer()
 
-    def action_toggle_escape( self ):
+    def action_toggle_escape( self ) -> None:
         """Toggle the display of the escape values for each cell."""
         self.query( MandelPoint ).toggle_class( "no-text" )
 
