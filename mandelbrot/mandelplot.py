@@ -60,14 +60,14 @@ class MandelbrotPlot( App[ None ] ):
     ]
     """The keyboard bindings for the app."""
 
-    from_x = reactive( -2 )
-    to_x   = reactive( 2 )
+    from_x = reactive( -2.0 )
+    to_x   = reactive( 2.0 )
     from_y = reactive( -2.5 )
     to_y   = reactive( 1.5 )
 
     def on_mount( self ) -> None:
         """Initialise some things once the DOM has been loaded."""
-        self.title = f"{self.TITLE} -- ({self.from_x}, {self.from_y} -> {self.to_x}, {self.to_y})"
+        self.title = f"{self.TITLE} -- ({self.from_x:.2f}, {self.from_y:.2f} -> {self.to_x:.2f}, {self.to_y:.2f})"
 
     @classmethod
     def frange( cls, r_from: float, r_to: float ) -> Iterator[ float ]:
