@@ -12,12 +12,27 @@ MandelPoint {
 
 MandelPoint.unstable {
     color: #505050;
-    background: #303030;
+    background: #022;
 }
 
 MandelPoint.stable {
     color: #707070;
-    background: #909090;
+    background: #00F;
 }
+
+MandelPoint.escape-2 { background: #200; }
+MandelPoint.escape-3 { background: #300; }
+MandelPoint.escape-4 { background: #400; }
+MandelPoint.escape-5 { background: #500; }
+MandelPoint.escape-6 { background: #600; }
+MandelPoint.escape-7 { background: #700; }
+MandelPoint.escape-8 { background: #800; }
+MandelPoint.escape-9 { background: #900; }
+MandelPoint.escape-10 { background: #A00; }
+MandelPoint.escape-11 { background: #B00; }
+MandelPoint.escape-12 { background: #C00; }
+MandelPoint.escape-13 { background: #D00; }
+MandelPoint.escape-14 { background: #E00; }
+MandelPoint.escape-15 { background: #F00; }
 
 /* mandelplot.css ends here */

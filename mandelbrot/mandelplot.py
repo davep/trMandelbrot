@@ -31,11 +31,14 @@ class MandelPoint( Static ):
            is in the set or not and the colour reflects that. In time this
            will be improved to add a bit more colour.
         """
-        self.add_class( "stable" if self.point.is_stable else "unstable" )
+        self.add_class(
+            "stable" if self.point.is_stable else "unstable",
+            f"escape-{min( int( self.point ), 15 )}"
+        )
 
     def render( self ) -> str:
         """Show the escape value for the given point."""
-        return str( int( self.point ) )
+        return "" # str( int( self.point ) )
 
 ##############################################################################
 class MandelbrotPlot( App[ None ] ):
