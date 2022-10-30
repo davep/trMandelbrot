@@ -59,6 +59,11 @@ class MandelbrotPlot( App[ None ] ):
     """The keyboard bindings for the app."""
 
     def compose( self ) -> ComposeResult:
+        """Compose the main screen..
+
+        Returns:
+            ComposeResult: The result of composing the screen.
+        """
         yield Header()
         for x in range( self.SIZE ):
             for y in range( self.SIZE ):
