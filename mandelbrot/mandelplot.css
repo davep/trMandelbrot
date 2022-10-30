@@ -1,4 +1,7 @@
 Screen {
+    /* Note the hard-coded size for the grid. There's also a value in the */
+    /* code too. This is something I feel Textual needs: a way to inject */
+    /* values into the CSS. */
     layout: grid;
     grid-size: 40 40;
     grid-gutter: 0 0;
