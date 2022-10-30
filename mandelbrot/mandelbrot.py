@@ -36,7 +36,7 @@ class Point( NamedTuple ):
             calculation going above 2.0.
         """
         c1 = complex( self.x, self.y )
-        c2 = 0
+        c2 = 0j
         for n in range( self.max_iteration ):
             if abs( c2 ) > 2:
                 return n
