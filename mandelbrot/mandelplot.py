@@ -55,8 +55,9 @@ class MandelbrotPlot( App[ None ] ):
     """int: The width/height of the plot."""
 
     BINDINGS = [
+        ( "e", "toggle_escape", "Toggle #s" ),
         ( "q", "quit", "Quit" ),
-        ( "e", "toggle_escape", "Toggle #s" )
+        ( "r", "remove", "Perform the Query.remove test" )
     ]
     """The keyboard bindings for the app."""
 
@@ -101,5 +102,14 @@ class MandelbrotPlot( App[ None ] ):
     def action_toggle_escape( self ) -> None:
         """Toggle the display of the escape values for each cell."""
         self.query( MandelPoint ).toggle_class( "no-text" )
+
+    def action_remove( self ) -> None:
+        """Perform a worst-case remove.
+
+        Note: This doesn't do anything useful at all, it just tests a
+        worst-case don't-ever-do-this thing in Textual itself. Handy for
+        performance testing.
+        """
+        self.query( MandelPoint ).remove()
 
 ### mandelplot.py ends here
