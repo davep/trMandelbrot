@@ -19,6 +19,9 @@ from .mandelbrot import Point
 class MandelPoint( Static ):
     """Widget that handles drawing a specific point in the set."""
 
+    point = reactive( Point( 0, 0 ) )
+    """Point: The point in the Mandelbrot set that this cell tracks."""
+
     def __init__( self, x: float, y: float ) -> None:
         """Initialise a point in the Mandelbrot Set.
 
@@ -27,19 +30,22 @@ class MandelPoint( Static ):
             y (float): The Y position of the point in the set.
         """
         super().__init__()
+        self.add_class( "no-text" )
         self.point = Point( x, y )
 
-    def on_mount( self ) -> None:
-        """Decide the colour of the location in the plot."""
+    def watch_point( self, new_point: Point ) -> None:
+        """React to the Point changing.
+
+        Args:
+            new_point (Point): The new value for the point.
+        """
+        # TODO: need a way of setting classes to a specific list.
+        self.remove_class( "stable", "unstable", *[ f"escape-{n}" for n in range( 2, 16 ) ] )
         self.add_class(
-            "no-text",
             "stable" if self.point.is_stable else "unstable",
             f"escape-{min( int( self.point ), 15 )}"
         )
-
-    def render( self ) -> str:
-        """Show the escape value for the given point."""
-        return str( int( self.point ) )
+        self.update( str( int( new_point ) ) )
 
 ##############################################################################
 class MandelbrotPlot( App[ None ] ):
@@ -55,20 +61,28 @@ class MandelbrotPlot( App[ None ] ):
     """int: The width/height of the plot."""
 
     BINDINGS = [
+        ( "up", "move( 0, -0.1 )", "Up" ),
+        ( "down", "move( 0, 0.1 )", "Down" ),
+        ( "left", "move( -0.1, 0 )", "Left" ),
+        ( "right", "move( 0.1, 0 )", "Right" ),
         ( "e", "toggle_escape", "Toggle #s" ),
         ( "q", "quit", "Quit" ),
         ( "r", "remove", "Perform the Query.remove test" )
     ]
     """The keyboard bindings for the app."""
 
-    from_x = reactive( -2.0 )
-    to_x   = reactive( 2.0 )
-    from_y = reactive( -2.5 )
-    to_y   = reactive( 1.5 )
+    from_x = -2.0
+    to_x   = 2.0
+    from_y = -2.5
+    to_y   = 1.5
+
+    def refresh_title( self ) -> None:
+        """Refresh the title to show the dimensions."""
+        self.title = f"{self.TITLE} -- ({self.from_x:.2f}, {self.from_y:.2f} -> {self.to_x:.2f}, {self.to_y:.2f})"
 
     def on_mount( self ) -> None:
-        """Initialise some things once the DOM has been loaded."""
-        self.title = f"{self.TITLE} -- ({self.from_x:.2f}, {self.from_y:.2f} -> {self.to_x:.2f}, {self.to_y:.2f})"
+        """Do some stuff once the DOM is loaded."""
+        self.refresh_title()
 
     @classmethod
     def frange( cls, r_from: float, r_to: float ) -> Iterator[ float ]:
@@ -111,5 +125,27 @@ class MandelbrotPlot( App[ None ] ):
         performance testing.
         """
         self.query( MandelPoint ).remove()
+
+    def action_move( self, x: int, y: int ) -> None:
+        """Move the Mandelbrot Set within the view.
+
+        Args:
+            x (int): The amount to move in the X direction.
+            y (int): The amount to move in the Y direction.
+        """
+
+        # Move the "canvas" bounds.
+        self.from_x += x
+        self.to_x   += x
+        self.from_y += y
+        self.to_y   += y
+
+        # Shuffle the points.
+        for cell in self.query( MandelPoint ):
+            cell.point += ( x, y )
+
+        # For some reason that I can't see right now, this isn't doing what
+        # I'd expect.
+        self.refresh_title()
 
 ### mandelplot.py ends here
