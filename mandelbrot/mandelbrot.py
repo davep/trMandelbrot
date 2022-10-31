@@ -46,4 +46,8 @@ class Point( NamedTuple ):
         """bool: Is the point stable?"""
         return int( self ) == 0
 
+    def __iadd__( self, move: tuple[ int, int ] ) -> "Point":
+        """Move a point by making a fresh copy, moved."""
+        return Point( self.x + move[ 0 ], self.y + move[ 1 ], self.max_iteration )
+
 ### mandelbrot.py ends here
