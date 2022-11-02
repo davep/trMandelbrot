@@ -39,12 +39,15 @@ class MandelPoint( Static ):
         Args:
             new_point (Point): The new value for the point.
         """
-        # TODO: need a way of setting classes to a specific list.
-        self.remove_class( "stable", "unstable", *[ f"escape-{n}" for n in range( 2, 16 ) ] )
+        # Point has moved so let's remove any class that isn't the one that
+        # controls if the calculation result of the point is shown...
+        self.remove_class( *filter( lambda c: c!= "no-text", self.classes ) )
+        # ...and then calculate the classes again.
         self.add_class(
             "stable" if self.point.is_stable else "unstable",
             f"escape-{min( int( self.point ), 15 )}"
         )
+        # Finally update the content with the new result.
         self.update( str( int( new_point ) ) )
 
 ##############################################################################
