@@ -2,17 +2,18 @@
 
 ##############################################################################
 # Python imports.
-from typing import NamedTuple
+from decimal import Decimal
+from typing  import NamedTuple
 
 ##############################################################################
 class Point( NamedTuple ):
     """Track/calculate a single point in a Mandelbrot Set."""
 
-    x: float
-    """float: The X position of the point to track."""
+    x: Decimal
+    """Decimal: The X position of the point to track."""
 
-    y: float
-    """float: The Y position of the point to track."""
+    y: Decimal
+    """Decimal: The Y position of the point to track."""
 
     max_iteration: int = 80
     """int: The resolution of the Mandelbrot set.
@@ -46,7 +47,7 @@ class Point( NamedTuple ):
         """bool: Is the point stable?"""
         return int( self ) == 0
 
-    def __iadd__( self, move: tuple[ int, int ] ) -> "Point":
+    def __iadd__( self, move: tuple[ Decimal, Decimal ] ) -> "Point":
         """Move a point by making a fresh copy, moved."""
         return Point( self.x + move[ 0 ], self.y + move[ 1 ], self.max_iteration )
 

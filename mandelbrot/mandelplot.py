@@ -2,12 +2,14 @@
 
 ##############################################################################
 # Python imports.
-from decimal import Decimal
-from typing  import Iterator
+from decimal  import Decimal
+from typing   import Iterator
+from operator import mul, truediv
 
 ##############################################################################
 # Textual imports.
 from textual.app      import App, ComposeResult
+from textual.binding  import Binding
 from textual.widgets  import Static, Header, Footer
 from textual.reactive import reactive
 
@@ -19,17 +21,30 @@ from .mandelbrot import Point
 class MandelPoint( Static ):
     """Widget that handles drawing a specific point in the set."""
 
-    point = reactive( Point( 0, 0 ) )
+    point = reactive( Point( Decimal( 0 ), Decimal( 0 ) ) )
     """Point: The point in the Mandelbrot set that this cell tracks."""
 
-    def __init__( self, x: float, y: float ) -> None:
+    @staticmethod
+    def at( x: int, y: int ) -> str:
+        """Get the ID of a Mandelbrot point at a given position.
+
+        Args:
+            x (int): The X location of the cell.
+            y (int): The Y location of the cell.
+
+        Returns:
+            str: The ID for the cell.
+        """
+        return f"point-{x}-{y}"
+
+    def __init__( self, point_id: str, x: Decimal, y: Decimal ) -> None:
         """Initialise a point in the Mandelbrot Set.
 
         Args:
-            x (float): The X position of the point in the set.
-            y (float): The Y position of the point in the set.
+            x (Decimal): The X position of the point in the set.
+            y (Decimal): The Y position of the point in the set.
         """
-        super().__init__()
+        super().__init__( id=point_id )
         self.add_class( "no-text" )
         self.point = Point( x, y )
 
@@ -64,20 +79,24 @@ class MandelbrotPlot( App[ None ] ):
     """int: The width/height of the plot."""
 
     BINDINGS = [
-        ( "up", "move( 0, -0.1 )", "Up" ),
-        ( "down", "move( 0, 0.1 )", "Down" ),
-        ( "left", "move( -0.1, 0 )", "Left" ),
-        ( "right", "move( 0.1, 0 )", "Right" ),
+        Binding( "up", "move( -0.1, 0 )", "Up", key_display="↑" ),
+        Binding( "down", "move( 0.1, 0 )", "Down", key_display="↓" ),
+        Binding( "left", "move( 0, -0.1 )", "Left", key_display="←" ),
+        Binding( "right", "move( 0, 0.1 )", "Right", key_display="→" ),
+        Binding( "right_square_bracket", "zoom( -1.2 )", "In", key_display="]" ),
+        Binding( "left_square_bracket", "zoom( 1.2 )", "Out", key_display="[" ),
+        Binding( "right_curly_bracket", "zoom( -2.0 )", "In+", key_display="}" ),
+        Binding( "left_curly_bracket", "zoom( 2.0 )", "Out+", key_display="{" ),
         ( "e", "toggle_escape", "Toggle #s" ),
         ( "q", "quit", "Quit" ),
-        ( "r", "remove", "Perform the Query.remove test" )
+        ( "r", "remove", "Remove Test" )
     ]
     """The keyboard bindings for the app."""
 
-    from_x = -2.0
-    to_x   = 2.0
-    from_y = -2.5
-    to_y   = 1.5
+    from_x = reactive( Decimal( -2.0 ) )
+    to_x   = reactive( Decimal( 2.0 ) )
+    from_y = reactive( Decimal( -2.5 ) )
+    to_y   = reactive( Decimal( 1.5 ) )
 
     def refresh_title( self ) -> None:
         """Refresh the title to show the dimensions."""
@@ -87,22 +106,30 @@ class MandelbrotPlot( App[ None ] ):
         """Do some stuff once the DOM is loaded."""
         self.refresh_title()
 
+    def watch_from_x( self, _ ):
+        self.refresh_title()
+
+    def watch_from_y( self, _ ):
+        self.refresh_title()
+
     @classmethod
-    def frange( cls, r_from: float, r_to: float ) -> Iterator[ float ]:
+    def frange( cls, r_from: Decimal, r_to: Decimal ) -> Iterator[ Decimal ]:
         """Generate a float range for the plot.
 
         Args:
-            r_from (float): The value to generate from.
-            r_to (float): The value to generate to.
+            r_from (Decimal): The value to generate from.
+            r_to (Decimal): The value to generate to.
 
         Yields:
-            float: Values between the range to fit the plot.
+            Decimal: Values between the range to fit the plot.
         """
-        step = Decimal( r_to - r_from ) / Decimal( cls.SIZE )
-        n    = Decimal( r_from )
-        while n < r_to:
-            yield float( n )
+        steps = 0
+        step  = Decimal( r_to - r_from ) / Decimal( cls.SIZE )
+        n     = Decimal( r_from )
+        while n < r_to and steps < cls.SIZE:
+            yield n
             n += Decimal( step )
+            steps += 1
 
     def compose( self ) -> ComposeResult:
         """Compose the main screen..
@@ -111,9 +138,9 @@ class MandelbrotPlot( App[ None ] ):
             ComposeResult: The result of composing the screen.
         """
         yield Header()
-        for x in self.frange( self.from_x, self.to_x ):
-            for y in self.frange( self.from_y, self.to_y ):
-                yield MandelPoint( y, x )
+        for col, x in enumerate( self.frange( self.from_x, self.to_x ) ):
+            for row, y in enumerate( self.frange( self.from_y, self.to_y ) ):
+                yield MandelPoint( MandelPoint.at( col, row ), y, x )
         yield Footer()
 
     def action_toggle_escape( self ) -> None:
@@ -129,26 +156,55 @@ class MandelbrotPlot( App[ None ] ):
         """
         self.query( MandelPoint ).remove()
 
-    def action_move( self, x: int, y: int ) -> None:
+    def action_move( self, x: Decimal, y: Decimal ) -> None:
         """Move the Mandelbrot Set within the view.
 
         Args:
-            x (int): The amount to move in the X direction.
-            y (int): The amount to move in the Y direction.
+            x (Decimal): The amount to move in the X direction.
+            y (Decimal): The amount to move in the Y direction.
         """
 
         # Move the "canvas" bounds.
-        self.from_x += x
-        self.to_x   += x
-        self.from_y += y
-        self.to_y   += y
+        self.from_x += Decimal( x )
+        self.to_x   += Decimal( x )
+        self.from_y += Decimal( y )
+        self.to_y   += Decimal( y )
 
         # Shuffle the points.
         for cell in self.query( MandelPoint ):
-            cell.point += ( x, y )
+            cell.point += ( Decimal( y ), Decimal( x ) )
 
         # For some reason that I can't see right now, this isn't doing what
         # I'd expect.
         self.refresh_title()
+
+    def action_zoom( self, zoom: Decimal ):
+        """Zoom in our out.
+
+        Args:
+            zoom (Decimal): The amount to zoom by.
+        """
+
+        # Figure the operator from the sign.
+        by = truediv if zoom < 0 else mul
+
+        # We don't need the sign anymore.
+        zoom = Decimal( abs( zoom ) )
+
+        # Apply the zoom.
+        self.from_x = Decimal( by( self.from_x, zoom ) )
+        self.to_x   = Decimal( by( self.to_x,   zoom ) )
+        self.from_y = Decimal( by( self.from_y, zoom ) )
+        self.to_y   = Decimal( by( self.to_y,   zoom ) )
+
+        # Recalculate the points.
+        for col, x in enumerate( self.frange( self.from_x, self.to_x ) ):
+            for row, y in enumerate( self.frange( self.from_y, self.to_y ) ):
+                self.query_one(
+                    f"#{MandelPoint.at( col, row )}", MandelPoint
+                ).point = Point( y, x )
+
+        # TODO: For now, ring the bell when we're done.
+        self.bell()
 
 ### mandelplot.py ends here
