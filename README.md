@@ -1,5 +1,7 @@
 # trMandelbrot
 
+![Evil](evil.jpg)
+
 A quick and dirty Mandelbrot set for the terminal. Written as an ongoing
 experiment with [Textual](https://textual.textualize.io/).
 
