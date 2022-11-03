@@ -14,7 +14,7 @@ __licence__    = "GPLv3+"
 ##############################################################################
 # Python imports.
 from decimal  import Decimal
-from typing   import Iterator, Final
+from typing   import Iterator
 from operator import mul, truediv
 
 ##############################################################################
@@ -27,9 +27,6 @@ from textual.reactive import reactive
 ##############################################################################
 class MandelPoint( Static ):
     """Widget that handles drawing a specific point in the set."""
-
-    MAX_ITERATION: Final = 80
-    """Maximum number of iterations to calculate to."""
 
     result = reactive( 0 )
     """int: The result of calculating this point in the Mandelbrot set."""
@@ -47,8 +44,7 @@ class MandelPoint( Static ):
         """
         return f"point-{x}-{y}"
 
-    @classmethod
-    def mandelbrot( cls, x: Decimal, y: Decimal ) -> int:
+    def mandelbrot( self, x: Decimal, y: Decimal ) -> int:
         """Return the Mandelbrot calculation for the point.
 
         Returns:
@@ -61,7 +57,7 @@ class MandelPoint( Static ):
         """
         c1 = complex( x, y )
         c2 = 0j
-        for n in range( cls.MAX_ITERATION ):
+        for n in range( self.app.max_iter ):
             if abs( c2 ) > 2:
                 return n
             c2 = c1 + ( c2 * c2 )
@@ -124,10 +120,11 @@ class MandelbrotPlot( App[ None ] ):
     ]
     """The keyboard bindings for the app."""
 
-    from_x = reactive( Decimal( -2.0 ) )
-    to_x   = reactive( Decimal( 2.0 ) )
-    from_y = reactive( Decimal( -2.5 ) )
-    to_y   = reactive( Decimal( 1.5 ) )
+    max_iter = reactive( 80 )
+    from_x   = reactive( Decimal( -2.0 ) )
+    to_x     = reactive( Decimal( 2.0 ) )
+    from_y   = reactive( Decimal( -2.5 ) )
+    to_y     = reactive( Decimal( 1.5 ) )
 
     canvas: dict[ str, MandelPoint ] = {}
 
