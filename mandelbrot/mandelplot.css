@@ -11,26 +11,15 @@ MandelPoint {
     width: 100%;
     height: 100%;
     text-align: center;
-}
-
-MandelPoint.unstable {
     color: #505050;
-    background: #022;
 }
 
-MandelPoint.unstable.no-text {
-    color: #00000000;
+.no-text {
+    color: #00000000 !important;
 }
 
-MandelPoint.stable {
-    color: #707070;
-    background: #00F;
-}
-
-MandelPoint.stable.no-text {
-    color: #00000000;
-}
-
+MandelPoint.escape-0 { background: #00F; color: #990; }
+MandelPoint.escape-1 { background: #022; }
 MandelPoint.escape-2 { background: #200; }
 MandelPoint.escape-3 { background: #300; }
 MandelPoint.escape-4 { background: #400; }
