@@ -142,9 +142,11 @@ class MandelbrotPlot( App[ None ] ):
         self.refresh_title()
 
     def watch_from_x( self, _ ):
+        """React to ``from_x`` being modified."""
         self.refresh_title()
 
     def watch_from_y( self, _ ):
+        """React to ``from_y`` being modified."""
         self.refresh_title()
 
     @classmethod
