@@ -174,10 +174,6 @@ class MandelbrotPlot( App[ None ] ):
         for cell in self.query( MandelPoint ):
             cell.point += ( Decimal( y ), Decimal( x ) )
 
-        # For some reason that I can't see right now, this isn't doing what
-        # I'd expect.
-        self.refresh_title()
-
     def action_zoom( self, zoom: Decimal ):
         """Zoom in our out.
 
