@@ -67,14 +67,14 @@ class MandelPoint( Static ):
             c2 = c1 + ( c2 * c2 )
         return 0
 
-    def __init__( self, point_id: str, x: Decimal, y: Decimal ) -> None:
+    def __init__( self, x: Decimal, y: Decimal ) -> None:
         """Initialise a point in the Mandelbrot Set.
 
         Args:
             x (Decimal): The X position of the point in the set.
             y (Decimal): The Y position of the point in the set.
         """
-        super().__init__( id=point_id )
+        super().__init__()
         self.add_class( "no-text" )
         self.calc( x, y )
 
@@ -92,9 +92,7 @@ class MandelPoint( Static ):
         # controls if the calculation result of the point is shown...
         self.remove_class( *filter( lambda c: c!= "no-text", self.classes ) )
         # ...and then calculate the classes again.
-        self.add_class(
-            f"escape-{min( int( new_result ), 15 )}"
-        )
+        self.add_class( f"escape-{min( int( new_result ), 15 )}" )
         # Finally update the content with the new result.
         self.update( str( new_result ) )
 
@@ -177,9 +175,8 @@ class MandelbrotPlot( App[ None ] ):
         yield Header()
         for col, x in enumerate( self.frange( self.from_x, self.to_x ) ):
             for row, y in enumerate( self.frange( self.from_y, self.to_y ) ):
-                point = MandelPoint( MandelPoint.at( col, row ), y, x )
+                yield ( point := MandelPoint( y, x ) )
                 self.canvas[ MandelPoint.at( col, row ) ] = point
-                yield point
         yield Footer()
 
     def action_toggle_escape( self ) -> None:
