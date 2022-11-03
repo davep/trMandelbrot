@@ -1,20 +1,20 @@
 ###############################################################################
 # Common make values.
-library := mandelbrot
-run     := pipenv run
-python  := $(run) python
-lint    := $(run) pylint
-mypy    := $(run) mypy
+app    := mandelplot
+run    := pipenv run
+python := $(run) python
+lint   := $(run) pylint
+mypy   := $(run) mypy
 
 ##############################################################################
 # Run the plotter.
 .PHONY: run
 run:
-	$(python) -m $(library)
+	$(python) $(app)
 
 .PHONY: debug
 debug:
-	$(run) textual run --dev $(library):MandelbrotPlot
+	$(run) textual run --dev $(app)
 
 .PHONY: console
 console:
@@ -47,15 +47,15 @@ depsshow:			# Show the dependency graph
 # Checking/testing/linting/etc.
 .PHONY: lint
 lint:				# Run Pylint over the library
-	$(lint) $(library)
+	$(lint) $(app)
 
 .PHONY: typecheck
 typecheck:			# Perform static type checks with mypy
-	$(mypy) --scripts-are-modules $(library)
+	$(mypy) --scripts-are-modules $(app)
 
 .PHONY: stricttypecheck
 stricttypecheck:	        # Perform a strict static type checks with mypy
-	$(mypy) --scripts-are-modules --strict $(library)
+	$(mypy) --scripts-are-modules --strict $(app)
 
 .PHONY: checkall
 checkall: lint stricttypecheck # Check all the things
@@ -65,10 +65,6 @@ checkall: lint stricttypecheck # Check all the things
 .PHONY: repl
 repl:				# Start a Python REPL
 	$(python)
-
-.PHONY: clean
-clean:				# Clean the build directories
-	rm -rf build dist $(library).egg-info
 
 .PHONY: help
 help:				# Display this help

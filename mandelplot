@@ -1,9 +1,20 @@
+#!/usr/bin/env python
 """Simple Mandelbrot Set plotter for the terminal, done in Textual."""
+
+######################################################################
+# Main app information.
+__author__     = "Dave Pearson"
+__copyright__  = "Copyright 2022, Dave Pearson"
+__credits__    = [ "Dave Pearson" ]
+__maintainer__ = "Dave Pearson"
+__email__      = "davep@davep.org"
+__version__    = "0.0.1"
+__licence__    = "GPLv3+"
 
 ##############################################################################
 # Python imports.
 from decimal  import Decimal
-from typing   import Iterator
+from typing   import Iterator, Final
 from operator import mul, truediv
 
 ##############################################################################
@@ -14,15 +25,14 @@ from textual.widgets  import Static, Header, Footer
 from textual.reactive import reactive
 
 ##############################################################################
-# Local imports.
-from .mandelbrot import Point
-
-##############################################################################
 class MandelPoint( Static ):
     """Widget that handles drawing a specific point in the set."""
 
-    point = reactive( Point( Decimal( 0 ), Decimal( 0 ) ) )
-    """Point: The point in the Mandelbrot set that this cell tracks."""
+    MAX_ITERATION: Final = 80
+    """Maximum number of iterations to calculate to."""
+
+    result = reactive( 0 )
+    """int: The result of calculating this point in the Mandelbrot set."""
 
     @staticmethod
     def at( x: int, y: int ) -> str:
@@ -37,6 +47,26 @@ class MandelPoint( Static ):
         """
         return f"point-{x}-{y}"
 
+    @classmethod
+    def mandelbrot( cls, x: Decimal, y: Decimal ) -> int:
+        """Return the Mandelbrot calculation for the point.
+
+        Returns:
+            int: The number of loops to escape, or 0 if it didn't.
+
+        Note:
+            The point is considered to be stable, considered to have not
+            escaped, if the ``max_iteration`` has been hit without the
+            calculation going above 2.0.
+        """
+        c1 = complex( x, y )
+        c2 = 0j
+        for n in range( cls.MAX_ITERATION ):
+            if abs( c2 ) > 2:
+                return n
+            c2 = c1 + ( c2 * c2 )
+        return 0
+
     def __init__( self, point_id: str, x: Decimal, y: Decimal ) -> None:
         """Initialise a point in the Mandelbrot Set.
 
@@ -46,9 +76,13 @@ class MandelPoint( Static ):
         """
         super().__init__( id=point_id )
         self.add_class( "no-text" )
-        self.point = Point( x, y )
+        self.calc( x, y )
 
-    def watch_point( self, new_point: Point ) -> None:
+    def calc( self, x: Decimal, y: Decimal ) -> None:
+        """Perform the Mandelbrot calculation for this point in the set."""
+        self.result = self.mandelbrot( x, y )
+
+    def watch_result( self, new_result: int ) -> None:
         """React to the Point changing.
 
         Args:
@@ -59,10 +93,10 @@ class MandelPoint( Static ):
         self.remove_class( *filter( lambda c: c!= "no-text", self.classes ) )
         # ...and then calculate the classes again.
         self.add_class(
-            f"escape-{min( int( self.point ), 15 )}"
+            f"escape-{min( int( new_result ), 15 )}"
         )
         # Finally update the content with the new result.
-        self.update( str( int( new_point ) ) )
+        self.update( str( new_result ) )
 
 ##############################################################################
 class MandelbrotPlot( App[ None ] ):
@@ -96,6 +130,8 @@ class MandelbrotPlot( App[ None ] ):
     to_x   = reactive( Decimal( 2.0 ) )
     from_y = reactive( Decimal( -2.5 ) )
     to_y   = reactive( Decimal( 1.5 ) )
+
+    canvas: dict[ str, MandelPoint ] = {}
 
     def refresh_title( self ) -> None:
         """Refresh the title to show the dimensions."""
@@ -139,7 +175,9 @@ class MandelbrotPlot( App[ None ] ):
         yield Header()
         for col, x in enumerate( self.frange( self.from_x, self.to_x ) ):
             for row, y in enumerate( self.frange( self.from_y, self.to_y ) ):
-                yield MandelPoint( MandelPoint.at( col, row ), y, x )
+                point = MandelPoint( MandelPoint.at( col, row ), y, x )
+                self.canvas[ MandelPoint.at( col, row ) ] = point
+                yield point
         yield Footer()
 
     def action_toggle_escape( self ) -> None:
@@ -155,6 +193,12 @@ class MandelbrotPlot( App[ None ] ):
         """
         self.query( MandelPoint ).remove()
 
+    def repaint_canvas( self ) -> None:
+        """Repaint the Mandelbrot canvas."""
+        for col, x in enumerate( self.frange( self.from_x, self.to_x ) ):
+            for row, y in enumerate( self.frange( self.from_y, self.to_y ) ):
+                self.canvas[ f"{MandelPoint.at( col, row )}" ].calc( y, x )
+
     def action_move( self, x: Decimal, y: Decimal ) -> None:
         """Move the Mandelbrot Set within the view.
 
@@ -162,16 +206,11 @@ class MandelbrotPlot( App[ None ] ):
             x (Decimal): The amount to move in the X direction.
             y (Decimal): The amount to move in the Y direction.
         """
-
-        # Move the "canvas" bounds.
         self.from_x += Decimal( x )
         self.to_x   += Decimal( x )
         self.from_y += Decimal( y )
         self.to_y   += Decimal( y )
-
-        # Shuffle the points.
-        for cell in self.query( MandelPoint ):
-            cell.point += ( Decimal( y ), Decimal( x ) )
+        self.repaint_canvas()
 
     def action_zoom( self, zoom: Decimal ):
         """Zoom in our out.
@@ -192,14 +231,12 @@ class MandelbrotPlot( App[ None ] ):
         self.from_y = Decimal( by( self.from_y, zoom ) )
         self.to_y   = Decimal( by( self.to_y,   zoom ) )
 
-        # Recalculate the points.
-        for col, x in enumerate( self.frange( self.from_x, self.to_x ) ):
-            for row, y in enumerate( self.frange( self.from_y, self.to_y ) ):
-                self.query_one(
-                    f"#{MandelPoint.at( col, row )}", MandelPoint
-                ).point = Point( y, x )
+        # Repaint.
+        self.repaint_canvas()
 
-        # TODO: For now, ring the bell when we're done.
-        self.bell()
+##############################################################################
+# Main code.
+if __name__  == "__main__":
+    MandelbrotPlot().run()
 
 ### mandelplot.py ends here
