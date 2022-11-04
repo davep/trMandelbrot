@@ -88,7 +88,7 @@ class MandelPoint( Static ):
         # controls if the calculation result of the point is shown...
         self.remove_class( *filter( lambda c: c!= "no-text", self.classes ) )
         # ...and then calculate the classes again.
-        self.add_class( f"escape-{min( int( new_result ), 15 )}" )
+        self.add_class( f"escape-{min( int( new_result ), 40 )}" )
         # Finally update the content with the new result.
         self.update( str( new_result ) )
 

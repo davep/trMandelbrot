@@ -15,24 +15,49 @@ MandelPoint {
 }
 
 .no-text {
-    color: #00000000 !important;
+    color: #0000 !important;
 }
 
 .escape-0 { background: #00F; color: #990; }
 .escape-1 { background: #022; }
-.escape-2 { background: #200; }
-.escape-3 { background: #300; }
-.escape-4 { background: #400; }
-.escape-5 { background: #500; }
-.escape-6 { background: #600; }
-.escape-7 { background: #700; }
-.escape-8 { background: #800; }
-.escape-9 { background: #900; }
-.escape-10 { background: #A00; }
-.escape-11 { background: #B00; }
-.escape-12 { background: #C00; }
-.escape-13 { background: #D00; }
-.escape-14 { background: #E00; }
-.escape-15 { background: #F00; }
+.escape-2  { background: #FF000000; }
+.escape-3  { background: #FF000010; }
+.escape-4  { background: #FF000020; }
+.escape-5  { background: #FF000030; }
+.escape-6  { background: #FF000040; }
+.escape-7  { background: #FF000050; }
+.escape-8  { background: #FF000060; }
+.escape-9  { background: #FF000070; }
+.escape-10 { background: #FF000080; }
+.escape-11 { background: #FF000090; }
+.escape-12 { background: #FF0000A0; }
+.escape-13 { background: #FF0000B0; }
+.escape-14 { background: #FF0000C0; }
+.escape-15 { background: #FF0000D0; }
+.escape-16 { background: #FF0000E0; }
+.escape-17 { background: #FF0000F0; }
+.escape-18 { background: #FF1000FF; }
+.escape-19 { background: #FF2000FF; }
+.escape-20 { background: #FF3000FF; }
+.escape-21 { background: #FF4000FF; }
+.escape-22 { background: #FF5000FF; }
+.escape-23 { background: #FF6000FF; }
+.escape-24 { background: #FF7000FF; }
+.escape-25 { background: #FF8000FF; }
+.escape-26 { background: #FF9000FF; }
+.escape-27 { background: #FFA000FF; }
+.escape-28 { background: #FFB000FF; }
+.escape-29 { background: #FFC000FF; }
+.escape-30 { background: #FFD000FF; }
+.escape-31 { background: #FFE000FF; }
+.escape-32 { background: #FFF000FF; }
+.escape-33 { background: #FF0010FF; }
+.escape-34 { background: #FF0020FF; }
+.escape-35 { background: #FF0030FF; }
+.escape-36 { background: #FF0040FF; }
+.escape-37 { background: #FF0050FF; }
+.escape-38 { background: #FF0060FF; }
+.escape-39 { background: #FF0070FF; }
+.escape-40 { background: #FF0080FF; }
 
 /* mandelplot.css ends here */
