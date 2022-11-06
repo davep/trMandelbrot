@@ -14,7 +14,7 @@ __licence__    = "GPLv3+"
 ##############################################################################
 # Python imports.
 from decimal  import Decimal
-from typing   import Iterator
+from typing   import Iterator, Final
 from operator import mul, truediv
 
 ##############################################################################
@@ -102,7 +102,7 @@ class MandelbrotPlot( App[ None ] ):
     CSS_PATH = "mandelplot.css"
     """str: The name of the CSS file."""
 
-    SIZE = 40
+    SIZE: Final = 40
     """int: The width/height of the plot."""
 
     BINDINGS = [
