@@ -121,12 +121,22 @@ class MandelbrotPlot( App[ None ] ):
     """The keyboard bindings for the app."""
 
     max_iter = reactive( 80 )
-    from_x   = reactive( Decimal( -2.0 ) )
-    to_x     = reactive( Decimal( 2.0 ) )
-    from_y   = reactive( Decimal( -2.5 ) )
-    to_y     = reactive( Decimal( 1.5 ) )
+    "int: Maximum number of iteratios to perform."
+
+    from_x = reactive( Decimal( -2.0 ) )
+    "Decimal: Start X position for the plot."
+
+    to_x = reactive( Decimal( 2.0 ) )
+    "Decimal: End X position for the plot."
+
+    from_y = reactive( Decimal( -2.5 ) )
+    "Decimal: Start Y position for the plot."
+
+    to_y = reactive( Decimal( 1.5 ) )
+    "Decimal: End Y position for the plot."
 
     canvas: dict[ str, MandelPoint ] = {}
+    """dict[ str, MandelPoint]: Dictionary of MandelPoint objects that make up the canvas."""
 
     def refresh_title( self ) -> None:
         """Refresh the title to show the dimensions."""
