@@ -228,11 +228,16 @@ class MandelbrotPlot( App[ None ] ):
 
         self.repaint_canvas()
 
-    def action_zoom( self, zoom: Decimal ):
-        """Zoom in our out.
+    @staticmethod
+    def _scale( from_pos: Decimal, to_pos: Decimal, zoom: Decimal ) -> tuple[ Decimal, Decimal ]:
+        """Scale a dimension.
 
         Args:
-            zoom (Decimal): The amount to zoom by.
+            from_pos (Decimal): The start position of the dimension.
+            to_pos (Decimal): The end position of the dimension.
+
+        Returns:
+            tuple[ Decimal, Decimal ]: The new start and end positions.
         """
 
         # Figure the operator from the sign.
@@ -241,11 +246,26 @@ class MandelbrotPlot( App[ None ] ):
         # We don't need the sign anymore.
         zoom = Decimal( abs( zoom ) )
 
+        # Calculate the old and new dimensions.
+        old_dim = ( to_pos - from_pos )
+        new_dim = Decimal( by( old_dim, zoom ) )
+
+        # Return the adjusted points.
+        return (
+            from_pos + Decimal( ( old_dim - new_dim ) / 2 ),
+            to_pos - Decimal( ( old_dim - new_dim ) / 2 )
+        )
+
+    def action_zoom( self, zoom: Decimal ):
+        """Zoom in our out.
+
+        Args:
+            zoom (Decimal): The amount to zoom by.
+        """
+
         # Apply the zoom.
-        self.from_x = Decimal( by( self.from_x, zoom ) )
-        self.to_x   = Decimal( by( self.to_x,   zoom ) )
-        self.from_y = Decimal( by( self.from_y, zoom ) )
-        self.to_y   = Decimal( by( self.to_y,   zoom ) )
+        self.from_x, self.to_x = self._scale( self.from_x, self.to_x, zoom )
+        self.from_y, self.to_y = self._scale( self.from_y, self.to_y, zoom )
 
         # Repaint.
         self.repaint_canvas()
