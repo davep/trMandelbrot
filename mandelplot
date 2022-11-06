@@ -106,10 +106,10 @@ class MandelbrotPlot( App[ None ] ):
     """int: The width/height of the plot."""
 
     BINDINGS = [
-        Binding( "up", "move( -0.1, 0 )", "Up", key_display="↑" ),
-        Binding( "down", "move( 0.1, 0 )", "Down", key_display="↓" ),
-        Binding( "left", "move( 0, -0.1 )", "Left", key_display="←" ),
-        Binding( "right", "move( 0, 0.1 )", "Right", key_display="→" ),
+        Binding( "up", "move( -1, 0 )", "Up", key_display="↑" ),
+        Binding( "down", "move( 1, 0 )", "Down", key_display="↓" ),
+        Binding( "left", "move( 0, -1 )", "Left", key_display="←" ),
+        Binding( "right", "move( 0, 1 )", "Right", key_display="→" ),
         Binding( "right_square_bracket", "zoom( -1.2 )", "In", key_display="]" ),
         Binding( "left_square_bracket", "zoom( 1.2 )", "Out", key_display="[" ),
         Binding( "right_curly_bracket", "zoom( -2.0 )", "In+", key_display="}" ),
@@ -207,17 +207,25 @@ class MandelbrotPlot( App[ None ] ):
             for row, y in enumerate( self.frange( self.from_y, self.to_y ) ):
                 self.canvas[ f"{MandelPoint.at( col, row )}" ].calc( y, x )
 
-    def action_move( self, x: Decimal, y: Decimal ) -> None:
+    MOVE_STEPS: Final = 5
+    "int: Defines the granularity of movement in the application."
+
+    def action_move( self, x: int, y: int ) -> None:
         """Move the Mandelbrot Set within the view.
 
         Args:
-            x (Decimal): The amount to move in the X direction.
-            y (Decimal): The amount to move in the Y direction.
+            x (int): The amount and direction to move in X.
+            y (int): The amount and direction to move in Y.
         """
-        self.from_x += Decimal( x )
-        self.to_x   += Decimal( x )
-        self.from_y += Decimal( y )
-        self.to_y   += Decimal( y )
+
+        x_step = Decimal( x * ( ( self.to_x - self.from_x ) / self.MOVE_STEPS ) )
+        y_step = Decimal( y * ( ( self.to_y - self.from_y ) / self.MOVE_STEPS ) )
+
+        self.from_x += x_step
+        self.to_x   += x_step
+        self.from_y += y_step
+        self.to_y   += y_step
+
         self.repaint_canvas()
 
     def action_zoom( self, zoom: Decimal ):
