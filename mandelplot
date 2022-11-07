@@ -260,7 +260,7 @@ class MandelbrotPlot( App[ None ] ):
             to_pos - Decimal( ( old_dim - new_dim ) / 2 )
         )
 
-    def action_zoom( self, zoom: Decimal ):
+    def action_zoom( self, zoom: Decimal ) -> None:
         """Zoom in our out.
 
         Args:
@@ -274,7 +274,7 @@ class MandelbrotPlot( App[ None ] ):
         # Repaint.
         self.repaint_canvas()
 
-    def action_max_iter( self, change: int ):
+    def action_max_iter( self, change: int ) -> None:
         """Change the maximum number of iterations for a calculation.
 
         Args:
