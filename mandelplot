@@ -114,6 +114,10 @@ class MandelbrotPlot( App[ None ] ):
         Binding( "left_square_bracket", "zoom( 1.2 )", "Out", key_display="[" ),
         Binding( "right_curly_bracket", "zoom( -2.0 )", "In+", key_display="}" ),
         Binding( "left_curly_bracket", "zoom( 2.0 )", "Out+", key_display="{" ),
+        Binding( "comma", "max_iter( -10 )", "Res-", ",", key_display="," ),
+        Binding( "less_than_sign", "max_iter( -100 )", "Res--", key_display="<" ),
+        Binding( "full_stop", "max_iter( 10 )", "Res+", key_display="." ),
+        Binding( "greater_than_sign", "max_iter( 100 )", "Res++", key_display=">" ),
         ( "e", "toggle_escape", "Toggle #s" ),
         ( "q", "quit", "Quit" ),
         ( "r", "remove", "Remove Test" )
@@ -269,6 +273,19 @@ class MandelbrotPlot( App[ None ] ):
 
         # Repaint.
         self.repaint_canvas()
+
+    def action_max_iter( self, change: int ):
+        """Change the maximum number of iterations for a calculation.
+
+        Args:
+            change (int): The amount to change by.
+        """
+        # Keep a lower bound for the max iteration.
+        if ( self.max_iter + change ) > 10:
+            self.max_iter += change
+            self.repaint_canvas()
+        else:
+            self.bell()
 
 ##############################################################################
 # Main code.
