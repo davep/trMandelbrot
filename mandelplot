@@ -119,10 +119,10 @@ class MandelbrotPlot( App[ None ] ):
         Binding( "less_than_sign",       "max_iter( -100 )", "Res--", key_display="<" ),
         Binding( "full_stop",            "max_iter( 10 )",   "Res+",  key_display="." ),
         Binding( "greater_than_sign",    "max_iter( 100 )",  "Res++", key_display=">" ),
-        ( "e", "toggle_escape", "Toggle #s" ),
-        ( "q", "quit", "Quit" ),
-        ( "r", "remove( False )", "Slow Remove Test" ),
-        ( "R", "remove( True )", "Fast Remove Test" )
+        Binding( "r",                    "remove( False )",  "Rem",   show=False ),
+        Binding( "R",                    "remove( True )",   "Rem",   show=False ),
+        Binding( "e",                    "toggle_escape",    "Toggle #s" ),
+        Binding( "q",                    "quit",             "Quit" )
     ]
     """The keyboard bindings for the app."""
 
