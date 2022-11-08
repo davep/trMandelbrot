@@ -114,7 +114,7 @@ class MandelbrotPlot( App[ None ] ):
         Binding( "left_square_bracket", "zoom( 1.2 )", "Out", key_display="[" ),
         Binding( "right_curly_bracket", "zoom( -2.0 )", "In+", key_display="}" ),
         Binding( "left_curly_bracket", "zoom( 2.0 )", "Out+", key_display="{" ),
-        Binding( "comma", "max_iter( -10 )", "Res-", ",", key_display="," ),
+        Binding( "comma", "max_iter( -10 )", "Res-", key_display="," ),
         Binding( "less_than_sign", "max_iter( -100 )", "Res--", key_display="<" ),
         Binding( "full_stop", "max_iter( 10 )", "Res+", key_display="." ),
         Binding( "greater_than_sign", "max_iter( 100 )", "Res++", key_display=">" ),
