@@ -152,15 +152,15 @@ class MandelbrotPlot( App[ None ] ):
         """Do some stuff once the DOM is loaded."""
         self.refresh_title()
 
-    def watch_from_x( self, _ ):
+    def watch_from_x( self, _ ) -> None:
         """React to ``from_x`` being modified."""
         self.refresh_title()
 
-    def watch_from_y( self, _ ):
+    def watch_from_y( self, _ ) -> None:
         """React to ``from_y`` being modified."""
         self.refresh_title()
 
-    def watch_max_iter( self, _ ):
+    def watch_max_iter( self, _ ) -> None:
         """React to the max iteration being changed."""
         self.refresh_title()
 
