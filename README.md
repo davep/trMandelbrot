@@ -1,24 +1,30 @@
 # trMandelbrot
 
+## Background
+
 ![Evil](img/evil.jpg)
 
-A quick and dirty Mandelbrot set for the terminal. Written as an ongoing
-experiment with [Textual](https://textual.textualize.io/).
+This started out as, and for now remains as, a not-very-efficient Mandelbrot
+Set plotter for the Terminal. It is written in Python, using
+[Textual](https://textual.textualize.io/); written in part as a
+demonstration but mostly as a really harsh test of the library.
 
-Likely not a good example of plotting a Mandelbrot Set, or indeed a good
-example of a Textual app. In fact, this really isn't a good Textual app.
-That's on purpose. Like, seriously, I'm not kidding, this is designed to be
-a REALLY BADLY-BEHAVED TEXTUAL APP! Really. Trust me. This is bad on
-purpose. It's designed to test the bounds of what's sensible, and worse.
+![Evil](img/set1.jpg)
 
-Like... I wouldn't even look at the code if I were you, it's cursed. If you
-look at the code you will never recover.
+## More details
 
-Expect lots of change over time; don't expect it to be the most efficient
-approach -- at least not for now. That's on purpose. This is 100% about
-exploring the edges of what can be done with Textual, it's not about writing
-a good Mandelbrot Explorer.
+There is a lot about this code that doesn't exactly make it a well-written
+Textual application; or rather much of it *is* doing Textual properly, but
+in some key areas it very much takes a "if you were to do this, don't do it
+like this" approach. As suggested above, this is on purpose. The code has
+proven to be, and continues to be, a rather good stress-test of the library.
 
-Did I mention that this is designed to misbehave and be bad?
+![Evil](img/set2.jpg)
+
+Eventually, when the sorts of performance issues this code tests are taken
+care of, I'll likely do a rewrite to make it far more efficient. Until then
+though, if you're tempted to submit improvements, please don't be offended
+if I don't accept them -- improvements aren't quite what this code needs
+right now. ;-)
 
 [//]: # (README.md ends here)
