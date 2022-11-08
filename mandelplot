@@ -146,7 +146,7 @@ class MandelbrotPlot( App[ None ] ):
 
     def refresh_title( self ) -> None:
         """Refresh the title to show the dimensions."""
-        self.title = f"{self.TITLE} -- ({self.from_x:.2f}, {self.from_y:.2f} -> {self.to_x:.2f}, {self.to_y:.2f})"
+        self.title = f"{self.TITLE} -- X: {self.from_x:.2f} -> {self.to_x:.2f} -- Y: {self.from_y:.2f} -> {self.to_y:.2f} -- Iter: {self.max_iter}"
 
     def on_mount( self ) -> None:
         """Do some stuff once the DOM is loaded."""
@@ -158,6 +158,10 @@ class MandelbrotPlot( App[ None ] ):
 
     def watch_from_y( self, _ ):
         """React to ``from_y`` being modified."""
+        self.refresh_title()
+
+    def watch_max_iter( self, _ ):
+        """React to the max iteration being changed."""
         self.refresh_title()
 
     @classmethod
