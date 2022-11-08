@@ -19,10 +19,11 @@ from operator import mul, truediv
 
 ##############################################################################
 # Textual imports.
-from textual.app      import App, ComposeResult
-from textual.binding  import Binding
-from textual.widgets  import Static, Header, Footer
-from textual.reactive import reactive
+from textual.app        import App, ComposeResult
+from textual.binding    import Binding
+from textual.widgets    import Static, Header, Footer
+from textual.reactive   import reactive
+from textual.containers import Container
 
 ##############################################################################
 class MandelPoint( Static ):
@@ -120,7 +121,8 @@ class MandelbrotPlot( App[ None ] ):
         Binding( "greater_than_sign", "max_iter( 100 )", "Res++", key_display=">" ),
         ( "e", "toggle_escape", "Toggle #s" ),
         ( "q", "quit", "Quit" ),
-        ( "r", "remove", "Remove Test" )
+        ( "r", "remove( False )", "Slow Remove Test" ),
+        ( "R", "remove( True )", "Fast Remove Test" )
     ]
     """The keyboard bindings for the app."""
 
@@ -179,6 +181,12 @@ class MandelbrotPlot( App[ None ] ):
             n += Decimal( step )
             steps += 1
 
+    def _pixels( self ) -> Iterator[ MandelPoint ]:
+        for col, x in enumerate( self.frange( self.from_x, self.to_x ) ):
+            for row, y in enumerate( self.frange( self.from_y, self.to_y ) ):
+                yield ( point := MandelPoint( y, x ) )
+                self.canvas[ MandelPoint.at( col, row ) ] = point
+
     def compose( self ) -> ComposeResult:
         """Compose the main screen..
 
@@ -186,24 +194,24 @@ class MandelbrotPlot( App[ None ] ):
             ComposeResult: The result of composing the screen.
         """
         yield Header()
-        for col, x in enumerate( self.frange( self.from_x, self.to_x ) ):
-            for row, y in enumerate( self.frange( self.from_y, self.to_y ) ):
-                yield ( point := MandelPoint( y, x ) )
-                self.canvas[ MandelPoint.at( col, row ) ] = point
+        yield Container( *self._pixels(), id="plot_container" )
         yield Footer()
 
     def action_toggle_escape( self ) -> None:
         """Toggle the display of the escape values for each cell."""
         self.query( MandelPoint ).toggle_class( "no-text" )
 
-    def action_remove( self ) -> None:
+    def action_remove( self, fast: bool ) -> None:
         """Perform a worst-case remove.
+
+        Args:
+            fast (bool): Perform a fast remove?
 
         Note: This doesn't do anything useful at all, it just tests a
         worst-case don't-ever-do-this thing in Textual itself. Handy for
         performance testing.
         """
-        self.query( MandelPoint ).remove()
+        self.query( "#plot_container" if fast else MandelPoint ).remove()
 
     def repaint_canvas( self ) -> None:
         """Repaint the Mandelbrot canvas."""
