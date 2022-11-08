@@ -97,7 +97,7 @@ class MandelPoint( Static ):
 class MandelbrotPlot( App[ None ] ):
     """An app to plot a Mandelbrot Set in the terminal."""
 
-    TITLE = "trMandelbrot -- A Terminal Mandelbrot Set Plotter"
+    TITLE = "trMandelbrot"
     """str: The title of the application."""
 
     CSS_PATH = "mandelplot.css"
@@ -146,8 +146,6 @@ class MandelbrotPlot( App[ None ] ):
 
     def refresh_title( self ) -> None:
         """Refresh the title to show the dimensions."""
-        # TODO: As of Textual 0.3.0 the title doesn't refresh, because of an
-        # issue in the library which will be solved in 0.4.0.
         self.title = f"{self.TITLE} -- ({self.from_x:.2f}, {self.from_y:.2f} -> {self.to_x:.2f}, {self.to_y:.2f})"
 
     def on_mount( self ) -> None:
